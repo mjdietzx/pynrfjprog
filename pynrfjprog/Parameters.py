@@ -32,9 +32,13 @@ def find_lib_dir():
     os_name = sys.platform.lower()
 
     if platform.machine().startswith('arm') and not os_name.startswith('dar'):
+        assert sys.maxsize <= 2**32
         nrfjprog_dll_folder = 'lib_armhf'
     elif platform.machine().startswith('aarch') and not os_name.startswith('dar'):
-        nrfjprog_dll_folder = 'lib_arm64'
+        if sys.maxsize > 2**32:
+            nrfjprog_dll_folder = 'lib_arm64'
+        else:
+            nrfjprog_dll_folder = 'lib_armhf'
     else:
         if sys.maxsize > 2**32:
             nrfjprog_dll_folder = 'lib_x64'
